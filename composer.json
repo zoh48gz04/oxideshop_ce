@@ -24,7 +24,11 @@
         "symfony/console": "^v3.4.15",
         "webmozart/path-util": "^2.3",
         "symfony/finder": "^3.4",
-        "symfony/filesystem": "^3.4"
+        "symfony/filesystem": "^3.4",
+        "oxid-esales/twig-theme": "dev-master",
+        "oxid-esales/twig-component": "dev-master",
+        "oxid-esales/twig-admin-theme": "dev-master",
+        "oxid-esales/twig-module-pe": "dev-master-initial-commit"
     },
     "require-dev": {
         "oxid-esales/flow-theme": "^v3.0.2",
@@ -85,6 +89,28 @@
                 "shop_tests_path": "SHOP_TESTS_PATH",
                 "partial_module_paths": "PARTIAL_MODULE_PATHS"
             }
+        }
+    },
+    "repositories": {
+        "oxid-esales/twig-enterprise-module": {
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/twig-enterprise-module"
+        },
+        "oxid-esales/twig-module-pe": {
+          "type": "vcs",
+          "url": "https://github.com/OXID-eSales/twig-module-pe"
+        },
+        "oxid-esales/twig-theme": {
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/twig-theme"
+        },
+        "oxid-esales/twig-admin-theme": {
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/twig-admin-theme"
+        },
+        "oxid-esales/twig-component": {
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/twig-component"
         }
     }
 }

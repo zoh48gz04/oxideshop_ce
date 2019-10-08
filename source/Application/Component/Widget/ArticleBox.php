@@ -144,6 +144,16 @@ class ArticleBox extends \OxidEsales\Eshop\Application\Component\Widget\WidgetCo
     }
 
     /**
+     * Returns wish list id
+     *
+     * @return string
+     */
+    public function getTestId()
+    {
+        return $this->getViewParameter('testid');
+    }
+
+    /**
      * Returns remove function
      *
      * @return string
