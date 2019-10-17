@@ -24,6 +24,7 @@ use oxUtilsObject;
  */
 class OrderController extends \OxidEsales\Eshop\Application\Controller\FrontendController
 {
+
     /**
      * Payment object
      *
@@ -371,7 +372,6 @@ class OrderController extends \OxidEsales\Eshop\Application\Controller\FrontendC
     public function isConfirmAGBActive()
     {
         if ($this->_blConfirmAGB === null) {
-            $this->_blConfirmAGB = false;
             $this->_blConfirmAGB = $this->getConfig()->getConfigParam('blConfirmAGB');
         }
 
@@ -396,7 +396,6 @@ class OrderController extends \OxidEsales\Eshop\Application\Controller\FrontendC
     public function showOrderButtonOnTop()
     {
         if ($this->_blShowOrderButtonOnTop === null) {
-            $this->_blShowOrderButtonOnTop = false;
             $this->_blShowOrderButtonOnTop = $this->getConfig()->getConfigParam('blShowOrderButtonOnTop');
         }
 
