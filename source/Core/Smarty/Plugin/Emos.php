@@ -434,8 +434,14 @@ class Emos
      * @param string $sCip            customer ip
      * @param string $sCity           customer city title
      */
-    public function addEmosBillingPageArray($sBillingId = "", $sCustomerNumber = "", $iTotal = 0, $sCountry = "", $sCip = "", $sCity = "")
-    {
+    public function addEmosBillingPageArray(
+        $sBillingId = "",
+        $sCustomerNumber = "",
+        $iTotal = 0,
+        $sCountry = "",
+        $sCip = "",
+        $sCity = ""
+    ) {
         $this->_setEmosBillingArray($sBillingId, $sCustomerNumber, $iTotal, $sCountry, $sCip, $sCity);
     }
 
@@ -449,8 +455,14 @@ class Emos
      * @param string $sCip            customer ip
      * @param string $sCity           customer city title
      */
-    protected function _setEmosBillingArray($sBillingId = "", $sCustomerNumber = "", $iTotal = 0, $sCountry = "", $sCip = "", $sCity = "")
-    {
+    protected function _setEmosBillingArray(
+        $sBillingId = "",
+        $sCustomerNumber = "",
+        $iTotal = 0,
+        $sCountry = "",
+        $sCip = "",
+        $sCity = ""
+    ) {
         /******************* prepare data *************************************/
         /* md5 the customer id to fullfill requirements of german datenschutzgeesetz */
         $sCustomerNumber = md5($sCustomerNumber);
