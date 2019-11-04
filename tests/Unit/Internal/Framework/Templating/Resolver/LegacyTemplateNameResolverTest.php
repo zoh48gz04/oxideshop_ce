@@ -4,11 +4,11 @@
  * See LICENSE file for license details.
  */
 
-namespace OxidEsales\EshopCommunity\Tests\Unit\Internal\Framework\Templating;
+namespace OxidEsales\EshopCommunity\Tests\Unit\Internal\Framework\Templating\Resolver;
 
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateEngineInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateNameResolver;
-use OxidEsales\EshopCommunity\Internal\Framework\Templating\LegacyTemplateNameResolver;
+use OxidEsales\EshopCommunity\Internal\Framework\Templating\Resolver\TemplateNameResolver;
+use OxidEsales\EshopCommunity\Internal\Framework\Templating\Resolver\LegacyTemplateNameResolver;
 
 class LegacyTemplateNameResolverTest extends \PHPUnit\Framework\TestCase
 {

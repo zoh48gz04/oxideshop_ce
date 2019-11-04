@@ -4,10 +4,10 @@
  * See LICENSE file for license details.
  */
 
-namespace OxidEsales\EshopCommunity\Tests\Unit\Internal\Framework\Templating;
+namespace OxidEsales\EshopCommunity\Tests\Unit\Internal\Framework\Templating\Resolver;
 
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateEngineInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateNameResolver;
+use OxidEsales\EshopCommunity\Internal\Framework\Templating\Resolver\TemplateNameResolver;
 
 class TemplateNameResolverTest extends \PHPUnit\Framework\TestCase
 {

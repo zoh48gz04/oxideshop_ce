@@ -4,13 +4,13 @@
  * See LICENSE file for license details.
  */
 
-namespace OxidEsales\EshopCommunity\Tests\Unit\Internal\Framework\Templating;
+namespace OxidEsales\EshopCommunity\Tests\Unit\Internal\Framework\Templating\Loader;
 
 use org\bovigo\vfs\vfsStream;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\Exception\TemplateFileNotFoundException;
-use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateFileLocatorInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateLoader;
-use OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateNameResolverInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Templating\Locator\FileLocatorInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Templating\Loader\TemplateLoader;
+use OxidEsales\EshopCommunity\Internal\Framework\Templating\Resolver\TemplateNameResolverInterface;
 
 class TemplateLoaderTest extends \PHPUnit\Framework\TestCase
 {
@@ -81,12 +81,12 @@ class TemplateLoaderTest extends \PHPUnit\Framework\TestCase
     /**
      * @param $path
      *
-     * @return TemplateFileLocatorInterface
+     * @return FileLocatorInterface
      */
     private function getFileLocatorMock($path)
     {
         $locator = $this
-            ->getMockBuilder('OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateFileLocatorInterface')
+            ->getMockBuilder('OxidEsales\EshopCommunity\Internal\Framework\Templating\Locator\FileLocatorInterface')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -105,7 +105,7 @@ class TemplateLoaderTest extends \PHPUnit\Framework\TestCase
     private function getTemplateNameResolverMock($name)
     {
         $locator = $this
-            ->getMockBuilder('OxidEsales\EshopCommunity\Internal\Framework\Templating\TemplateNameResolverInterface')
+            ->getMockBuilder('OxidEsales\EshopCommunity\Internal\Framework\Templating\Resolver\TemplateNameResolverInterface')
             ->disableOriginalConstructor()
             ->getMock();
 

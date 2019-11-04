@@ -6,14 +6,10 @@
 
 namespace OxidEsales\EshopCommunity\Application\Controller\Admin;
 
-use OxidEsales\EshopCommunity\Internal\Framework\Theme\Bridge\AdminThemeBridgeInterface;
 use DOMXPath;
 use DOMDocument;
 use DOMElement;
 use stdClass;
-use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
-use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
 
 /**
  * Navigation tree control class
@@ -458,38 +454,8 @@ class NavigationTree extends \OxidEsales\Eshop\Core\Base
      */
     protected function _getMenuFiles()
     {
-        $adminThemeName = $this->getContainer()->get(AdminThemeBridgeInterface::class)->getActiveTheme();
-        $editionPathSelector = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector()));
-        $fullAdminDir = $editionPathSelector->getViewsDirectory() . $adminThemeName . DIRECTORY_SEPARATOR;
-        $menuFile = $fullAdminDir . 'menu.xml';
-
-        // including std file
-        if (file_exists($menuFile)) {
-            $filesToLoad[] = $menuFile;
-        }
-
-        // including custom file
-        if (file_exists($fullAdminDir . 'user.xml')) {
-            $filesToLoad[] = $fullAdminDir . 'user.xml';
-        }
-
-        // including module menu files
-        $path = getShopBasePath();
-        $moduleList = oxNew(\OxidEsales\Eshop\Core\Module\ModuleList::class);
-        $activeModuleInfo = $moduleList->getActiveModuleInfo();
-        if (is_array($activeModuleInfo)) {
-            foreach ($activeModuleInfo as $modulePath) {
-                $fullPath = $path . "modules/" . $modulePath;
-                // missing file/folder?
-                if (is_dir($fullPath)) {
-                    // including menu file
-                    $menuFile = $fullPath . "/menu.xml";
-                    if (file_exists($menuFile) && is_readable($menuFile)) {
-                        $filesToLoad[] = $menuFile;
-                    }
-                }
-            }
-        }
+        $adminNavigationFileLocator = $this->getContainer()->get('oxid_esales.templating.admin.navigation.file.locator');
+        $filesToLoad = $adminNavigationFileLocator->locate();
 
         return $filesToLoad;
     }
