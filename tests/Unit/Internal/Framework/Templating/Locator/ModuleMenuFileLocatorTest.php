@@ -7,10 +7,11 @@
 namespace OxidEsales\EshopCommunity\Tests\Integration\Internal\Framework\Templating\Locator;
 
 use org\bovigo\vfs\vfsStream;
-use OxidEsales\EshopCommunity\Internal\Framework\Config\Dao\ShopConfigurationSettingDaoInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Config\DataObject\ShopConfigurationSetting;
-use OxidEsales\EshopCommunity\Internal\Framework\Dao\EntryDoesNotExistDaoException;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Dao\ShopConfigurationDaoInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\DataObject\ModuleConfiguration;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\DataObject\ShopConfiguration;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolverInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\State\ModuleStateServiceInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Templating\Locator\ModuleMenuFileLocator;
 use OxidEsales\EshopCommunity\Tests\Unit\Internal\ContextStub;
 use Symfony\Component\Filesystem\Filesystem;
@@ -25,10 +26,11 @@ class ModuleMenuFileLocatorTest extends \PHPUnit\Framework\TestCase
         $fileName = 'menu.xml';
         $this->createModuleStructure($fileName);
         $locator = new ModuleMenuFileLocator(
-            $this->getShopSettingsDaoMock(),
             $this->getModulePathResolverMock(),
+            $this->getShopConfigurationDaoMock(),
+            new ContextStub(),
             new Filesystem(),
-            new ContextStub()
+            $this->getModuleStateServiceMock()
         );
 
         $expectedPath = $this->vfsStreamDirectory->url().'/modules/menuTestModule/' . $fileName;
@@ -40,15 +42,14 @@ class ModuleMenuFileLocatorTest extends \PHPUnit\Framework\TestCase
         $fileName = 'menu.xml';
         $this->createModuleStructure($fileName);
 
-        /** @var ShopConfigurationSettingDaoInterface $shopSettingDao */
-        $shopSettingDao = $this->getMockBuilder(ShopConfigurationSettingDaoInterface::class)->getMock();
-        $shopSettingDao->method('get')->willThrowException(new EntryDoesNotExistDaoException());
-
+        $shopConfigurationDao = $this->prophesize(ShopConfigurationDaoInterface::class);
+        $shopConfigurationDao->get(1)->willReturn(new ShopConfiguration());
         $locator = new ModuleMenuFileLocator(
-            $shopSettingDao,
             $this->getModulePathResolverMock(),
+            $shopConfigurationDao->reveal(),
+            new ContextStub(),
             new Filesystem(),
-            new ContextStub()
+            $this->getModuleStateServiceMock()
         );
 
         $this->assertSame([], $locator->locate());
@@ -66,20 +67,30 @@ class ModuleMenuFileLocatorTest extends \PHPUnit\Framework\TestCase
         return $pathResolver;
     }
 
-    /**
-     * @return ShopConfigurationSettingDaoInterface
-     */
-    private function getShopSettingsDaoMock()
+    private function getShopConfigurationDaoMock(): ShopConfigurationDaoInterface
     {
-        $shopSetting = $this->getMockBuilder(ShopConfigurationSetting::class)->getMock();
-        $shopSetting->method('getValue')->willReturn(['moduleId']);
+        $moduleConfiguration = new ModuleConfiguration();
+        $moduleConfiguration
+            ->setId('testModule')
+            ->setPath('menuTestModule');
 
-        $shopSettingDao = $this->getMockBuilder(ShopConfigurationSettingDaoInterface::class)->getMock();
-        $shopSettingDao->method('get')->willReturn($shopSetting);
-        return $shopSettingDao;
+        $shopConfiguration = new ShopConfiguration();
+        $shopConfiguration->addModuleConfiguration($moduleConfiguration);
+
+        $dao = $this->prophesize(ShopConfigurationDaoInterface::class);
+        $dao->get(1)->willReturn($shopConfiguration);
+
+        return $dao->reveal();
     }
 
-    private function createModuleStructure($fileName)
+    private function getModuleStateServiceMock(): ModuleStateServiceInterface
+    {
+        $moduleStateService = $this->prophesize(ModuleStateServiceInterface::class);
+        $moduleStateService->isActive('testModule', 1)->willReturn(true);
+        return $moduleStateService->reveal();
+    }
+
+    private function createModuleStructure($fileName): void
     {
         $structure = [
             'modules' => [

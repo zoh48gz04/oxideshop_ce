@@ -6,10 +6,9 @@
 
 namespace OxidEsales\EshopCommunity\Internal\Framework\Templating\Locator;
 
-use OxidEsales\EshopCommunity\Internal\Framework\Config\Dao\ShopConfigurationSettingDaoInterface;
-use OxidEsales\EshopCommunity\Internal\Framework\Config\DataObject\ShopConfigurationSetting;
-use OxidEsales\EshopCommunity\Internal\Framework\Dao\EntryDoesNotExistDaoException;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Dao\ShopConfigurationDaoInterface;
 use OxidEsales\EshopCommunity\Internal\Framework\Module\Path\ModulePathResolverInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\State\ModuleStateServiceInterface;
 use OxidEsales\EshopCommunity\Internal\Transition\Utility\ContextInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -25,9 +24,9 @@ class ModuleMenuFileLocator implements NavigationFileLocatorInterface
     private $modulePathResolver;
 
     /**
-     * @var ShopConfigurationSettingDaoInterface
+     * @var ShopConfigurationDaoInterface
      */
-    private $shopConfigurationSettingDao;
+    private $shopConfigurationDao;
 
     /**
      * @var ContextInterface
@@ -45,23 +44,26 @@ class ModuleMenuFileLocator implements NavigationFileLocatorInterface
     private $fileName = 'menu.xml';
 
     /**
+     * @var ModuleStateServiceInterface
+     */
+    private $moduleStateService;
+
+    /**
      * ModuleMenuFileLocator constructor.
      *
-     * @param ShopConfigurationSettingDaoInterface $shopConfigurationSettingDao
-     * @param ModulePathResolverInterface          $modulePathResolver
-     * @param Filesystem                           $fileSystem
-     * @param ContextInterface                     $context
+     * @param ModulePathResolverInterface   $modulePathResolver
+     * @param ShopConfigurationDaoInterface $shopConfigurationDao
+     * @param ContextInterface              $context
+     * @param Filesystem                    $fileSystem
+     * @param ModuleStateServiceInterface   $moduleStateService
      */
-    public function __construct(
-        ShopConfigurationSettingDaoInterface $shopConfigurationSettingDao,
-        ModulePathResolverInterface $modulePathResolver,
-        Filesystem $fileSystem,
-        ContextInterface $context
-    ) {
-        $this->shopConfigurationSettingDao = $shopConfigurationSettingDao;
+    public function __construct(ModulePathResolverInterface $modulePathResolver, ShopConfigurationDaoInterface $shopConfigurationDao, ContextInterface $context, Filesystem $fileSystem, ModuleStateServiceInterface $moduleStateService)
+    {
         $this->modulePathResolver = $modulePathResolver;
+        $this->shopConfigurationDao = $shopConfigurationDao;
         $this->context = $context;
         $this->fileSystem = $fileSystem;
+        $this->moduleStateService = $moduleStateService;
     }
 
     /**
@@ -74,14 +76,8 @@ class ModuleMenuFileLocator implements NavigationFileLocatorInterface
     public function locate()
     {
         $shopId = $this->context->getCurrentShopId();
-        try {
-            $activeModuleSettings = $this->getActiveModulesShopConfigurationSetting($shopId);
-            $activeModuleIds = $activeModuleSettings->getValue();
-            $menuFiles = $this->getActiveModuleMenuFiles($activeModuleIds, $shopId);
-        } catch (EntryDoesNotExistDaoException $exception) {
-            return [];
-        }
-        return $menuFiles;
+        $activeModuleIds = $this->getActiveModuleIds($shopId);
+        return $this->getActiveModuleMenuFiles($activeModuleIds, $shopId);
     }
 
     /**
@@ -117,15 +113,18 @@ class ModuleMenuFileLocator implements NavigationFileLocatorInterface
     /**
      * @param int $shopId
      *
-     * @return ShopConfigurationSetting
-     *
-     * @throws EntryDoesNotExistDaoException
+     * @return string[]
      */
-    private function getActiveModulesShopConfigurationSetting(int $shopId): ShopConfigurationSetting
+    private function getActiveModuleIds(int $shopId): array
     {
-        return $this->shopConfigurationSettingDao->get(
-            ShopConfigurationSetting::ACTIVE_MODULES,
-            $shopId
-        );
+        $activeModuleIds = [];
+        $shopConfiguration = $this->shopConfigurationDao->get($shopId);
+        foreach ($shopConfiguration->getModuleConfigurations() as $moduleConfiguration) {
+            if ($this->moduleStateService->isActive($moduleConfiguration->getId(), $shopId)) {
+                $activeModuleIds[] = $moduleConfiguration->getId();
+            }
+        }
+
+        return $activeModuleIds;
     }
 }
