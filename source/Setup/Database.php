@@ -6,7 +6,6 @@
 
 namespace OxidEsales\EshopCommunity\Setup;
 
-use Conf;
 use Exception;
 use PDO;
 use PDOException;

@@ -141,19 +141,3 @@ if (!function_exists('getVendorDirectory')) {
         return VENDOR_PATH;
     }
 }
-
-if (!class_exists("Conf", false)) {
-    /**
-     * Config key loader class
-     */
-    class Conf
-    {
-        /**
-         * Conf constructor.
-         */
-        public function __construct()
-        {
-            $config = new \OxidEsales\EshopCommunity\Core\ConfigFile(getShopBasePath() . "/config.inc.php");
-        }
-    }
-}
