@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed missed deprecated getConfig and getSession method usages [PR-721](https://github.com/OXID-eSales/oxideshop_ce/pull/721)
 - Improve oxseo::OXOBJECTID index to fit current queries [PR-466](https://github.com/OXID-eSales/oxideshop_ce/pull/466)
 
+### Removed
+- Removed database encoding:
+    - Changed database fields:
+        - `oxvalue` field in `oxconfig` table changed from `blob` to `text`
+        - `oxvalue` field in `oxuserpayments` table changed from `blob` to `text`
+    - Removed methods and properties:
+        - `OxidEsales\Eshop\Core\Config::getDecodeValueQuery()`
+        - `OxidEsales\Eshop\Core\Config::$sConfigKey`
+        - `OxidEsales\Eshop\Core\Config::DEFAULT_CONFIG_KEY`
+    - Removed classes:
+        - `Conf`
+    - Removed settings:
+        - `sConfigKey` from `config.inc.php`
+    - Deprecated:
+        - `OxidEsales\Eshop\Application\Model\UserPayment::$_sPaymentKey`
+        - `OxidEsales\Eshop\Application\Model\UserPayment::getPaymentKey()`
+
 ## [6.5.0] - 2019-11-07
 
 ### Added
