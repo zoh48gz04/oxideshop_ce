@@ -175,32 +175,6 @@ class ArticlelistTest extends \OxidTestCase
     }
 
     /**
-     * Test load aktion articles total amount.
-     *
-     * @return null
-     */
-    public function testLoadActionArticlesTotalAmount()
-    {
-        $sArticleTable = getViewName('oxarticles');
-
-        $sSql = "SELECT oxactionid, count(*) as cnt FROM `oxactions2article`
-                 LEFT JOIN " . $sArticleTable . " ON $sArticleTable.oxid = oxactions2article.oxartid
-                 WHERE $sArticleTable.oxid is not null
-                 GROUP BY oxactionid";
-
-        $aTotalCnt = $this->getDb(2)->getAll($sSql);
-
-        $oList = oxNew("oxArticleList");
-
-        foreach ($aTotalCnt as $aData) {
-            $oList->loadActionArticles($aData['oxactionid']);
-            $this->assertEquals($aData['cnt'], $oList->count());
-            $this->assertGreaterThan(0, $oList->count());
-            $oList->clear();
-        }
-    }
-
-    /**
      * Test load aktion articles if all not active.
      *
      * #M379: Promotions cannot be de-activated
@@ -271,14 +245,12 @@ class ArticlelistTest extends \OxidTestCase
         if ($this->getTestConfig()->getShopEdition() == 'EE') {
             $this->markTestSkipped('This test is for Community or Professional edition only.');
         }
-
         $oTest = $this->getProxyClass('oxArticleList');
-        $oTest->loadActionArticles('oxstart');
-        $this->assertEquals(2, count($oTest));
-        $this->assertTrue($oTest['2077'] instanceof Article);
-        $this->assertTrue($oTest['943ed656e21971fb2f1827facbba9bec'] instanceof Article);
-        $this->assertEquals(19, $oTest['2077']->getPrice()->getBruttoPrice());
-        $this->assertEquals("Kuyichi Jeans Mick", $oTest['943ed656e21971fb2f1827facbba9bec']->oxarticles__oxtitle->value);
+        $oTest->loadActionArticles('oxtopstart');
+        $this->assertEquals(1, count($oTest));
+        $this->assertTrue($oTest['1849'] instanceof Article);
+        $this->assertEquals(89.9, $oTest['1849']->getPrice()->getBruttoPrice());
+        $this->assertEquals("Bar Butler 6 BOTTLES", $oTest['1849']->oxarticles__oxtitle->value);
     }
 
     /**
