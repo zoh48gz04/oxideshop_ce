@@ -132,6 +132,8 @@ class UserPayment extends \OxidEsales\Eshop\Core\Model\BaseModel
     /**
      * Inserts payment information to DB. Returns insert status.
      *
+     * @deprecated since v6.6.0 (2019-11-25); This method will removed in next version because we no longer support oxidcreditcard
+     *
      * @return bool
      */
     protected function _insert()
@@ -197,6 +199,8 @@ class UserPayment extends \OxidEsales\Eshop\Core\Model\BaseModel
 
     /**
      * Returns an array of dyn payment values
+     *
+     * @deprecated since v6.6.0 (2019-11-25); This method will removed in next version because we no longer support oxidcreditcard
      *
      * @return array
      */

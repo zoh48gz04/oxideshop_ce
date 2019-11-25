@@ -26,10 +26,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
         - `Conf`
     - Removed settings:
         - `sConfigKey` from `config.inc.php`
-    - Deprecated:
-        - `OxidEsales\Eshop\Application\Model\UserPayment::$_sPaymentKey`
-        - `OxidEsales\Eshop\Application\Model\UserPayment::getPaymentKey()`
-
+    
+### Deprecated
+    - `OxidEsales\Eshop\Application\Model\UserPayment::$_sPaymentKey`
+    - `OxidEsales\Eshop\Application\Model\UserPayment::getPaymentKey()`
+    - `OxidEsales\Eshop\Core\Registry\UserPayment::_insert()`
+    - `OxidEsales\EshopCommunity\Core\InputValidator::validatePaymentInputData()`
+    - `OxidEsales\EshopCommunity\Application\Controller\PaymentController::validatePayment()`
+    
 ## [6.5.0] - 2019-11-07
 
 ### Added
